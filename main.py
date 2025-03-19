@@ -1,16 +1,18 @@
-# This is a sample Python script.
+import requests
+from typing import Dict, List, Any
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+class Plugin:
 
+    def __init__(self, base_url: str, username: str, password: str):
+        self.base_url = base_url
+        self.username = username
+        self.password = password
+        self.auth_token = None
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+    def test_connectivity(self) -> bool:
 
+        raise NotImplementedError("Subclasses must implement test_connectivity")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    def collect_evidence(self) -> List[Dict[str, Any]]:
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+        raise NotImplementedError("Subclasses must implement collect_evidence")
