@@ -1,3 +1,5 @@
+import json
+import os
 import requests
 from typing import Dict, List, Any, Optional
 import logging
@@ -93,11 +95,26 @@ class DummyJsonPlugin(Plugin):
 
         return evidence
 
+def save_to_json(data: List[Dict[str, Any]], filename: str) -> bool:
+
+    os.makedirs(os.path.dirname(filename) or ".", exist_ok=True)
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        logger.info(f"Evidence saved to {filename}")
+        return True
+    except (IOError, json.JSONEncodeError) as e:
+        logger.error(f"Failed to save evidence to {filename}: {e}")
+        return False
+
+
 def main():
     # Configuration
     base_url = "https://dummyjson.com"
     username = "emilys"
     password = "emilyspass"
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
 
     # Initialize plugin
     plugin = DummyJsonPlugin(base_url, username, password)
@@ -119,6 +136,15 @@ def main():
                     print(f"{key}: {len(value)} items")
                 else:
                     print(f"{key}: {value}")
+    if evidence:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = os.path.join(output_dir, f"evidence_{timestamp}.json")
+        if save_to_json(evidence, filename):
+            print(f"Evidence successfully saved to {filename}")
+        else:
+            print(f"Failed to save evidence to {filename}. Check logs for details.")
+    else:
+        print("No evidence to save.")
 
 if __name__ == "__main__":
     main()
