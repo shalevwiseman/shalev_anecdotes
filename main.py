@@ -71,3 +71,27 @@ class DummyJsonPlugin(Plugin):
         evidence.append({"E3 - 60 Posts with Comments": posts_with_comments})
 
         return evidence
+
+def main():
+    # Configuration
+    base_url = "https://dummyjson.com"
+    username = "emilys"
+    password = "emilyspass"
+
+    # Initialize plugin
+    plugin = DummyJsonPlugin(base_url, username, password)
+
+    # Test connectivity
+    if not plugin.test_connectivity():
+        print("Exiting due to connectivity failure.")
+        return
+
+    # Collect evidence
+    evidence = plugin.collect_evidence()
+
+    for item in evidence:
+        for key, value in item.items():
+            print(f"{key}: {len(value) if isinstance(value, list) else value}")
+
+if __name__ == "__main__":
+    main()
